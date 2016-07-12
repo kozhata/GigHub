@@ -9,6 +9,8 @@ using System.Web.Http;
 
 namespace GigHub.Controllers.API
 {
+    [Authorize]
+    [RoutePrefix("api/notifications")]
     public class NotificationsController : ApiController
     {
         private readonly CustomIdentityDbContext _dbContext;
@@ -18,6 +20,8 @@ namespace GigHub.Controllers.API
             _dbContext = new CustomIdentityDbContext();
         }
 
+        [HttpGet]
+        [Route("")]
         public IEnumerable<NotificationDto> GetNewNotifications()
         {
             string userId = User.Identity.GetUserId();
