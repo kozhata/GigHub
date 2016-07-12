@@ -249,6 +249,10 @@
     <Compile Include="Migrations\201607071752230_AddNotification.Designer.cs">
       <DependentUpon>201607071752230_AddNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607121749121_NewNameForAttendences.cs" />
+    <Compile Include="Migrations\201607121749121_NewNameForAttendences.Designer.cs">
+      <DependentUpon>201607121749121_NewNameForAttendences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Auth\CustomIdentityDbContext.cs" />
     <Compile Include="Models\Attendance.cs" />
@@ -390,6 +394,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607071752230_AddNotification.resx">
       <DependentUpon>201607071752230_AddNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607121749121_NewNameForAttendences.resx">
+      <DependentUpon>201607121749121_NewNameForAttendences.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
