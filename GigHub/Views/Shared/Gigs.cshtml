@@ -1,0 +1,74 @@
+﻿@model GigHub.ViewModels.GigsViewModel
+@{
+    ViewBag.Title = Model.Heading;
+}
+
+<h1>@Model.Heading</h1>
+
+<ul class="gigs voffset4">
+    @foreach (var gig in Model.Gigs)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @gig.Date.ToString("MMM")
+                </div>
+                <div class="day">
+                    @gig.Date.ToString("d ")
+                </div>
+            </div>
+            <div class="details">
+                <span class="artist">
+                    @gig.Artist.Name
+                    @if (gig.IsCanceled)
+                    {
+                        <button class="btn btn-danger btn-sm">Canceled</button>
+                    }
+                    @if (Model.ShowActions && !Model.UserId.Equals(gig.ArtistId))
+                    {
+                        <button class="btn btn-link btn-sm js-toggle-follow" data-user-id="@gig.ArtistId">Follow</button>
+                    }
+                </span>
+                <span class="genre">
+                    @gig.Genre.Name
+                </span>
+                @if (Model.ShowActions && !Model.UserId.Equals(gig.ArtistId) && !gig.IsCanceled)
+                {
+                    <button data-gig-id="@gig.Id" class="btn btn-default pull-right js-toggle-attendance">Going?</button>
+                }
+            </div>
+        </li>
+    }
+</ul>
+
+@section scripts
+{
+    <script>
+        $(document)
+            .ready(function () {
+                $(".js-toggle-attendance")
+                    .click(function (e) {
+                        var button = $(e.target);
+                        $.post("/api/attendance", { gigId: button.attr("data-gig-id") })
+                        .done(function () {
+                            button.removeClass("btn-default").addClass("btn-info").text("Going");
+                        })
+                        .fail(function (e) {
+                            alert(e);
+                        });
+                    });
+
+                $(".js-toggle-follow")
+                    .click(function (e) {
+                        var button = $(e.target);
+                        $.post("/api/followings", { followeeId: button.attr("data-user-id") })
+                        .done(function (e) {
+                            button.text("Following");
+                        })
+                        .fail(function (e) {
+                            alert(e);
+                        });
+                    });
+            });
+    </script>
+}

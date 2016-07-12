@@ -1,0 +1,40 @@
+﻿@model GigHub.ViewModels.GigFormViewModel
+
+@{
+    ViewBag.Title = Model.Heading;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(Model.Action, "Gigs", FormMethod.Post))
+{
+    <div class="alert alert-info">All fields are required</div>
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.Id)
+    <div class="form-group">
+        @Html.LabelFor(x => x.Venue)
+        @Html.TextBoxFor(x => x.Venue, new { @class = "form-control", autofocus = "autofocus" })
+        @Html.ValidationMessageFor(x => x.Venue)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Date)
+        @Html.TextBoxFor(x => x.Date, new { @class = "form-control", placeholder = $"eg. {DateTime.Now.Date.ToString("dd MMMM yyyy")}" })
+        @Html.ValidationMessageFor(x => x.Date)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Time)
+        @Html.TextBoxFor(x => x.Time, new { @class = "form-control", placeholder = $"eg. {DateTime.Now.ToString("HH mm")}" })
+        @Html.ValidationMessageFor(x => x.Time)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.GenreId)
+        @Html.DropDownListFor(x => x.GenreId, new SelectList(Model.Genres, "Id", "Name"), "Select Genre..", new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.GenreId)
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

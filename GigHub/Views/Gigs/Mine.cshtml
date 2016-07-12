@@ -1,0 +1,126 @@
+﻿@model IEnumerable<GigHub.Models.Gig>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<ul class="gigs voffset4">
+    @foreach (var gig in Model)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @gig.Date.ToString("MMM")
+                </div>
+                <div class="day">
+                    @gig.Date.ToString("d ")
+                </div>
+            </div>
+            <div class="details">
+                <span class="artist">
+                    @gig.Venue
+                </span>
+                <span class="genre">
+                    @gig.Genre.Name
+                </span>
+                <div class="actions">
+                    <a href="@Url.Action("Edit", "Gigs", new {id = gig.Id})">Edit</a>
+                    @if (gig.IsCanceled)
+                    {
+                        <a href="#" class="js-restore-gig" data-gig-id="@gig.Id">Restore</a>
+                    }
+                    else
+                    {
+                        <a href="#" class="js-cancel-gig" data-gig-id="@gig.Id">Cancel</a>
+                    }
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+@section scripts
+{
+    <script>
+        $(document).ready(() => {
+            $(".js-cancel-gig").on("click", (e) => {
+                var link = $(e.target);
+
+                bootbox.dialog({
+                    message: "Delete?",
+                    title: "Confirm",
+                    buttons: {
+                        success: {
+                            label: "No!",
+                            className: "btn-defaut",
+                            callback: function () {
+                                bootbox.hideAll();
+                            }
+                        },
+                        danger: {
+                            label: "Yes!",
+                            className: "btn-danger",
+                            callback: function () {
+                                $.ajax({
+                                    url: "/api/gigs/" + link.attr("data-gig-id") +"/cancel",
+                                    method: "DELETE"
+                                })
+                                .done(() => {
+                                    link.parents("li").fadeOut(() => {
+                                        $(this).remove();
+                                    });
+                                })
+                                .fail((e) => {
+                                    bootbox.alert("Error", function (e) {
+
+                                    });
+                                });
+
+                            }
+                        }
+                    }
+                });
+            });
+
+            $(".js-restore-gig").on("click", (e) => {
+                var link = $(e.target);
+
+                bootbox.dialog({
+                    message: "Restore?",
+                    title: "Confirm",
+                    buttons: {
+                        success: {
+                            label: "No!",
+                            className: "btn-defaut",
+                            callback: function () {
+                                bootbox.hideAll();
+                            }
+                        },
+                        danger: {
+                            label: "Yes!",
+                            className: "btn-success",
+                            callback: function () {
+                                $.ajax({
+                                    url: "/api/gigs/" + link.attr("data-gig-id") + "/uncancel",
+                                    method: "POST"
+                                })
+                                .done(() => {
+                                    link.parents("li").fadeOut(() => {
+                                        $(this).remove();
+                                    });
+                                })
+                                .fail((e) => {
+                                    bootbox.alert("Error", function (e) {
+
+                                    });
+                                });
+
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
