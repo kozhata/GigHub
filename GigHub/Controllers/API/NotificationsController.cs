@@ -30,6 +30,7 @@ namespace GigHub.Controllers.API
                 .Where(x => x.UserId == userId && !x.IsRead)
                 .Select(x => x.Notification)
                 .Include(x => x.Gig.Artist)
+                .Include(x => x.Gig.Genre)
                 .ToList();
 
             return notifications.Select(x => new NotificationDto
